@@ -58,6 +58,7 @@
  * Groucho stands 480 high, and the others at their heights beside him, each with
  * its feet at the middle of the bottom edge. */
 #include "art.h"
+#include "parts.h"
 #define X(name, file) ART(name, file)
 SPRITES
 #undef X
@@ -561,18 +562,46 @@ static void draw_scene(SDL_Renderer *r, int w, int h)
         double mx, my;
         at_face(STACHE_X, STACHE_Y, &mx, &my);
         put(SP_grin, mx, my, GRIN_STACHE_X, GRIN_STACHE_Y, fs, 0, grin, 0);
+        /* and his own moustache back over it: the grin was drawn with a little one */
+        double sx, sy;
+        at_face(STACHE_ON_FACE_X, STACHE_ON_FACE_Y - 6 * grin, &sx, &sy);
+        put(SP_stache, sx, sy, 0, 0, fs, 0, 1, 0);
     }
 
-    /* the cigar, burning down through the hour; on the hour he taps off the ash,
-     * and lights a new one with a puff */
+    /* the cigar, burning down through the hour, and ticking off the seconds: it
+     * snaps up a notch on each second and down on the next, as he chews it. On the
+     * hour he taps it, the long ash breaks off and falls, and he lights a new one. */
     double tx, ty, ay, cxp, cyp;
     int c = cigar_now(hp, &tx, &ty, &ay);
-    double tilt = CIGAR_TILT + (hp < 1.6 ? sin(hp * 30) * 6 : 0) + sin(anim_t * 0.6) * 2;
+    double sec = fmod(T, 1.0), snap = 1 - exp(-sec * 40);
+    int odd = (long)floor(T) & 1;
+    double tick = (odd ? 1 : -1) * (2 * snap - 1) * 2.4;
+    double tap = hp < 0.6 ? sin(hp / 0.6 * M_PI * 3) * 7 * (1 - hp / 0.6) : 0;
+    double tilt = CIGAR_TILT + tick + tap;
     at_face(CIGAR_X, CIGAR_Y, &cxp, &cyp);
-    put(c, cxp, cyp, 0, ay, fs * CIGAR_SCALE, tilt, 1, 0);
-    if (c != SP_cigar0) {
-        double a = tilt * M_PI / 180, k = fs * CIGAR_SCALE, dx = tx * k, dy = (ty - ay) * k;
-        double sx = cxp + dx * cos(a) - dy * sin(a), sy = cyp + dx * sin(a) + dy * cos(a);
+    double k = fs * CIGAR_SCALE, ta = tilt * M_PI / 180;
+    if (hp < 1.6) {                                        /* the stub, and the ash falling */
+        put(SP_stub, cxp, cyp, 0, 46, k, tilt, 1, 0);
+        double dx = ASH_ON_CIGAR_X * k, dy = (ASH_ON_CIGAR_Y - 46) * k;
+        double axp = cxp + dx * cos(ta) - dy * sin(ta), ayp = cyp + dx * sin(ta) + dy * cos(ta);
+        double f = fmax(0, hp - 0.35);                     /* it holds for the tap, then goes */
+        double fall = 0.5 * 0.9 * sh * f * f;
+        double alpha = 1 - ramp(ayp + fall, sh * 0.85, sh * 1.05);
+        put(SP_ash, axp + f * fs * 60, ayp + fall, 0, 0, k, tilt + f * 70, alpha, 0);
+        /* a puff of crumbs where it hits his lapel */
+        if (f > 0) for (int i = 0; i < 8; i++) {
+            double q = ramp(hp, 0.35 + i * 0.05, 1.6);
+            if (q <= 0 || q >= 1) continue;
+            double bx = axp + fs * (40 + 30 * sin(i * 2.3)) + q * fs * 50 * cos(i), by = ayp + fall * 0.9 + q * fs * 30 * sin(i * 1.7);
+            disc(bx, by, fs * 5 * (1 - q), col((Rgb){190, 186, 178}, 0.8 * (1 - q)), col((Rgb){190, 186, 178}, 0));
+        }
+        flush(ren);
+    } else {
+        put(c, cxp, cyp, 0, ay, k, tilt, 1, 0);
+    }
+    if (c != SP_cigar0 && hp >= 1.6) {
+        double dx = tx * k, dy = (ty - ay) * k;
+        double sx = cxp + dx * cos(ta) - dy * sin(ta), sy = cyp + dx * sin(ta) + dy * cos(ta);
         double puff = hp < 6 ? 1 + 2 * (1 - ramp(hp, 4, 6)) : 1;
         smoke(sx, sy, fmin(puff, 1.6));
     }

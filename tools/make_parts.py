@@ -41,9 +41,10 @@ def key(img):
 def blobs(mask, grow=6):
     """The separate shapes on the sheet (each grown a little first, so a brow's
     loose hairs stay with it), as a label image and a count."""
-    m = Image.fromarray((mask * 255).astype(np.uint8))
-    from PIL import ImageFilter
-    m = np.asarray(m.filter(ImageFilter.MaxFilter(2 * grow + 1))) > 0
+    m = mask
+    if grow > 0:                             # (a 1-pixel MaxFilter crashes Pillow)
+        from PIL import ImageFilter
+        m = np.asarray(Image.fromarray((mask * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(2 * grow + 1))) > 0
     lab = np.zeros(m.shape, np.int32); n = 0
     h, w = m.shape
     for y0, x0 in zip(*np.nonzero(m)):
@@ -99,7 +100,52 @@ def gummo():
         save(part, f"{OUT}/gummo{f}.png")
         print(f"gummo{f}.png {c - a}x{d - b}")
 
-def write_lists(boxes, size):
+STACHE_AT = (478, 640)           # a point in his moustache, on the face picture
+def stache():
+    """His moustache, cut out of the face picture as a piece of its own, so it can be
+    laid back over the grin: the dark shape that holds STACHE_AT, with its outline."""
+    from PIL import ImageFilter
+    face = np.asarray(Image.open(f"{OUT}/face.png").convert("RGBA")).copy()
+    dark = (face[..., :3].max(-1) < 95) & (face[..., 3] > 128)
+    lab, n = blobs(dark, grow=0)
+    i = lab[STACHE_AT[1], STACHE_AT[0]]
+    if not i: print("MISSING: stache"); return
+    # only its thick body, not the thin lines of his nose and smile that touch it:
+    # open it (shrink, then grow back), and take its ink outline with it
+    body = Image.fromarray(((lab == i) * 255).astype(np.uint8))
+    body = body.filter(ImageFilter.MinFilter(15)).filter(ImageFilter.MaxFilter(15)).filter(ImageFilter.MaxFilter(7))
+    m = (np.asarray(body) > 0) & (face[..., 3] > 0)
+    ys, xs = np.nonzero(m)
+    x0, y0, x1, y1 = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+    part = face[y0:y1, x0:x1].copy()
+    part[..., 3] = np.where(m[y0:y1, x0:x1], part[..., 3], 0)
+    save(part, f"{OUT}/stache.png")
+    print(f"stache.png {x1 - x0}x{y1 - y0} at {x0},{y0} on the face")
+    return x0, y0
+
+def ash():
+    """The last cigar split in two, so its long ash can break off and fall: the grey
+    ash with its outline, and the stub left behind."""
+    from PIL import ImageFilter
+    c = np.asarray(Image.open(f"{OUT}/cigar3.png").convert("RGBA")).copy()
+    r, g, b = (c[..., i].astype(int) for i in range(3))
+    grey = (abs(r - g) < 22) & (abs(g - b) < 22) & (r > 110) & (c[..., 3] > 128)
+    h, w = grey.shape
+    xx = np.arange(w)[None, :].repeat(h, 0); yy = np.arange(h)[:, None].repeat(w, 1)
+    brown = (r - b > 40) & (c[..., 3] > 128)
+    CUT = 206                                             # where the stub ends and the ash begins
+    m = (xx >= CUT - 8) | ((yy > 134) & (xx > 185))       # the ash, with its outline, but none of the stub
+    m &= ~(brown & (xx < CUT + 4)) & (c[..., 3] > 0)
+    a = c.copy(); a[..., 3] = np.where(m, a[..., 3], 0)
+    stub = c.copy(); stub[..., 3] = np.where((xx < CUT) & (yy <= 128), stub[..., 3], 0)
+    ys, xs = np.nonzero(a[..., 3] > 0)
+    x0, y0 = xs.min(), ys.min()
+    save(a[y0:, x0:], f"{OUT}/ash.png")
+    save(stub, f"{OUT}/stub.png")
+    print(f"ash.png at {x0},{y0} on the last cigar; stub.png")
+    return x0, y0
+
+def write_lists(boxes, size, st, ash_at):
     W, H = size
     lines = ["/* Made by tools/make_parts.py: where each part of Groucho's face lay on the sheet,",
              " * in its pixels, so that the parts go back where they were drawn. */",
@@ -107,6 +153,8 @@ def write_lists(boxes, size):
              "typedef struct { int x0, y0, x1, y1; } PartBox;"]
     for name, (x0, y0, x1, y1) in sorted(boxes.items()):
         lines.append(f"static const PartBox BOX_{name} = {{{x0}, {y0}, {x1}, {y1}}};")
+    lines.append(f"#define ASH_ON_CIGAR_X {ash_at[0]}\n#define ASH_ON_CIGAR_Y {ash_at[1]}   /* where the ash was on the last cigar */")
+    lines.append(f"#define STACHE_ON_FACE_X {st[0]}\n#define STACHE_ON_FACE_Y {st[1]}   /* where the moustache piece came from on the face */")
     open("src/parts.h", "w").write("\n".join(lines) + "\n")
     files = sorted(f for f in os.listdir(OUT) if f.endswith((".png", ".jpg")))
     items = [f'X({os.path.splitext(f)[0].replace("-", "_")}, "{f}")' for f in files]
@@ -122,7 +170,8 @@ def main():
     gummo()
     subprocess.run(["magick", f"{SRC}/02-backdrop.jpeg", "-resize", "2560x", "-quality", "88", f"{OUT}/backdrop.jpg"], check=True)
     print("backdrop.jpg")
-    write_lists(boxes, size)
+    st = stache()
+    write_lists(boxes, size, st, ash())
 
 if __name__ == "__main__":
     main()

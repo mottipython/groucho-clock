@@ -14,3 +14,7 @@ static const PartBox BOX_glasses = {1517, 150, 1994, 335};
 static const PartBox BOX_grin = {1046, 105, 1505, 449};
 static const PartBox BOX_pupil = {1249, 707, 1335, 794};
 static const PartBox BOX_smoke = {1762, 1581, 1875, 1948};
+#define ASH_ON_CIGAR_X 186
+#define ASH_ON_CIGAR_Y 6   /* where the ash was on the last cigar */
+#define STACHE_ON_FACE_X 264
+#define STACHE_ON_FACE_Y 595   /* where the moustache piece came from on the face */
