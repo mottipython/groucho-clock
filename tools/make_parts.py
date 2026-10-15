@@ -120,6 +120,25 @@ def gummo():
         print(f"gummo{f}.png {c - a}x{d - b}")
 
 STACHE_AT = (478, 640)           # a point in his moustache, on the face picture
+GLASSES_BOX = (1510, 150, 2000, 335)      # where the glasses are on the face sheet
+def glasses():
+    """The glasses are a thin dark wire on the magenta, too close to it for the key:
+    cut them out by darkness instead (anything well darker than the background), and
+    keep the silver of their arms."""
+    img = np.asarray(Image.open(f"{SRC}/01-face.jpeg").convert("RGB")).astype(float)
+    x0, y0, x1, y1 = GLASSES_BOX
+    c = img[y0:y1, x0:x1]
+    r, g, b = c[..., 0], c[..., 1], c[..., 2]
+    ink = np.clip((210 - (r + b) / 2) / 90, 0, 1)
+    silver = (np.abs(r - g) < 35) & (np.abs(b - g) < 35) & (g > 120)
+    a = np.where(silver, 1.0, ink)
+    rgb = np.where(silver[..., None], c, np.array([38, 32, 36]))
+    out = np.dstack([rgb, a * 255]).astype(np.uint8)
+    ys, xs = np.nonzero(out[..., 3] > 60)
+    out = out[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+    save(out, f"{OUT}/glasses.png")
+    print(f"glasses.png {out.shape[1]}x{out.shape[0]} (cut by darkness)")
+
 def stache():
     """His moustache, cut out of the face picture as a piece of its own, so it can be
     laid back over the grin: the dark shape that holds STACHE_AT, with its outline."""
@@ -132,8 +151,16 @@ def stache():
     # only its thick body, not the thin lines of his nose and smile that touch it:
     # open it (shrink, then grow back), and take its ink outline with it
     body = Image.fromarray(((lab == i) * 255).astype(np.uint8))
-    body = body.filter(ImageFilter.MinFilter(15)).filter(ImageFilter.MaxFilter(15)).filter(ImageFilter.MaxFilter(7))
+    # close it (fill the shine on the greasepaint), then open it (drop the nose's
+    # lines), then grow a little for its ink edge, and smooth the outline
+    body = body.filter(ImageFilter.MaxFilter(11)).filter(ImageFilter.MinFilter(11))
+    body = body.filter(ImageFilter.MinFilter(17)).filter(ImageFilter.MaxFilter(17)).filter(ImageFilter.MaxFilter(5))
+    body = body.filter(ImageFilter.GaussianBlur(3)).point(lambda v: 255 if v > 128 else 0)
     m = (np.asarray(body) > 0) & (face[..., 3] > 0)
+    # only the rows where it is nearly full width: not the nostrils above, nor the
+    # smile lines below
+    widths = m.sum(1)
+    m[widths < 0.75 * widths.max()] = False
     ys, xs = np.nonzero(m)
     x0, y0, x1, y1 = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
     part = face[y0:y1, x0:x1].copy()
@@ -190,6 +217,7 @@ def main():
     brothers()
     subprocess.run(["magick", f"{SRC}/02-backdrop.jpeg", "-resize", "2560x", "-quality", "88", f"{OUT}/backdrop.jpg"], check=True)
     print("backdrop.jpg")
+    glasses()
     st = stache()
     write_lists(boxes, size, st, ash())
 
