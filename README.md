@@ -28,6 +28,7 @@ Linux, Windows and macOS. One of the
 
     groucho-clock                  full screen on every display
     groucho-clock --window         in a window; Esc or Q quits
+    groucho-clock --mute           without the sound
     groucho-clock --clock 4:59:50  start at that time of day instead of the real time
     groucho-clock --snapshot out.bmp --time 3 --size 1920x1080
 
