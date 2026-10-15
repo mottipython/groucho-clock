@@ -8,23 +8,33 @@ Linux, Windows and macOS. One of the
 
 ## What it shows
 
-- **The time, in his glasses.** Each lens is a clock face: hours on the left, minutes
-  on the right. His pupils are at the tips of the hands.
-- **The seconds**, on his cigar, which snaps up and down a notch every second.
+Groucho, head and shoulders on a theatre stage, in his painted greasepaint moustache
+and eyebrows.
+
+- **The time, in his glasses.** Each lens is a clock face: hours on the left (12, 3,
+  6, 9) and minutes on the right (60, 15, 30, 45, with a tick for every minute). His
+  pupils are at the tips of the hands.
+- **The seconds** tick on his cigar, which snaps up and down a notch every second.
 - **Every minute** his eyebrows waggle.
-- **Through the hour** the cigar burns down and the ash grows. On the hour the ash
-  breaks off and falls, and he lights a new one.
-- **Every quarter of an hour** he grins and holds up one of his own lines on a card:
-  51 of them, from *The Cocoanuts* to *A Day at the Races*, in a different order every
-  day, each with the film it is from.
-- **Now and then** one of his brothers peeks in: Gummo (who left the act before the
-  films) raises his boater, Chico tips his hat, Harpo honks his horn or pulls a face,
-  and Zeppo raises an eyebrow. Groucho's eyebrows go up for each.
+- **Through the hour** the cigar burns down and the ash grows. On the hour he taps
+  it, the ash breaks off and falls, and he lights a new one and grins.
+- **Every quarter of an hour** one of his own lines comes up on a card, with the film
+  it is from: 51 of them, from *The Cocoanuts* to *A Day at the Races*, in a different
+  order every day.
+- **Now and then** one of his brothers peeks in from the left: Gummo (who left the act
+  before the films) raises his boater, winks or shushes; Chico tips his hat, winks or
+  has an idea; Harpo honks his horn, pulls his "gookie" face or waves; Zeppo raises an
+  eyebrow, smiles or shrugs. Groucho's eyebrows go up for each, and he grins.
+- **The sound** is a clock's: a quiet tick-tock, a chime with each line, and on the
+  hour the cigar tapped, the ash falling and a match struck. Harpo's horn is a real
+  one. The sound can be turned off (below).
 
 | | |
 |---|---|
 | ![](docs/screenshots/02-five-oclock.jpg) | ![](docs/screenshots/03-gummo.jpg) |
 | Five o'clock | Gummo |
+| ![](docs/screenshots/05-harpo.jpg) | ![](docs/screenshots/04-the-ash.jpg) |
+| Harpo | The ash falling |
 
 ## Install
 
@@ -103,7 +113,8 @@ The cartoon pictures were drawn with Google's Gemini from the prompts in
 `assets/PROMPTS.md` (the sheets as Gemini made them are in `assets/src`), then cut up
 by `tools/make_parts.py` and put together and animated in code. The program was
 written with Anthropic's Claude, working from the author's direction. The lines are
-Groucho's own, as Wikiquote gives them.
+Groucho's own, as Wikiquote gives them. The sounds are made in code, except Harpo's
+horn, which is a recording from public-domain media.
 
 ## Building
 

@@ -9,9 +9,10 @@ Maintainer: Motti Schleider <motti.schleider@gmail.com>
 Description: The Groucho Clock, a cartoon screensaver clock of Groucho Marx
  The Groucho Clock, a cartoon screensaver that tells the time with Groucho
  Marx's eyes: the lenses of his glasses are two clock faces, and his pupils are
- the hands, the left one on the hour and the right one on the minutes. His
- eyebrows waggle every minute, his cigar burns down through the hour, and on the
- hour he says something. Now and then his brother Gummo peeks in.
+ the hands, the left one on the hour and the right one on the minutes. His cigar
+ ticks the seconds and burns down through the hour, his eyebrows waggle every
+ minute, one of his own lines comes up every quarter of an hour, and now and then
+ one of his brothers peeks in. With a clock's quiet sounds, which can be turned off.
  .
  On Wayland desktops it starts by itself after five minutes idle.
  groucho-clock-screensaver changes the delay or turns it off.
