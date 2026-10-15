@@ -16,3 +16,9 @@ A clock you can actually read, and a Groucho to look at:
 - **Gummo**, as a tribute: now and then he peeks in round the edge of the picture and
   is gone before you are sure you saw him.
 - Real time, like edhar-clock (read_time()).
+
+## Two clocks (the user, 2026-10-14)
+
+Make BOTH:
+1. **The cartoon clock**, from the Gemini prompts in assets/PROMPTS.md (matches the Mirror Scene and Duck Soup).
+2. **The Monty Python clock**, Terry Gilliam style: real photo cut-outs with hinged and rolling parts. Groucho is cut from a face-on frame of Animal Crackers (1930, public domain), with Victorian engravings for the scenery (the Met's CC0 prints) and Gummo from a public-domain vaudeville photo, if one exists. It matches Captain Spaulding.
