@@ -22,3 +22,12 @@ A clock you can actually read, and a Groucho to look at:
 Make BOTH:
 1. **The cartoon clock**, from the Gemini prompts in assets/PROMPTS.md (matches the Mirror Scene and Duck Soup).
 2. **The Monty Python clock**, Terry Gilliam style: real photo cut-outs with hinged and rolling parts. Groucho is cut from a face-on frame of Animal Crackers (1930, public domain), with Victorian engravings for the scenery (the Met's CC0 prints) and Gummo from a public-domain vaudeville photo, if one exists. It matches Captain Spaulding.
+
+## Status (2026-10-15, overnight)
+
+- DONE, cartoon clock (this repo): dials in his glasses, 51 one-liners every quarter
+  hour, the cigar ticking the seconds, the ash falling on the hour, the grin with his
+  own moustache, Gummo. README, screenshots and icon; packages build. Not published.
+- DONE, Monty Python clock: its own repo, ~/projects/groucho-time ("Groucho Time").
+- Open: the other brothers in the cartoon clock would need Gemini art (a sheet of
+  Chico, Harpo and Zeppo peeking in, like 03-gummo).
