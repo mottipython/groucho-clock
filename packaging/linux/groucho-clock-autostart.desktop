@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=The Groucho Clock screensaver
+Comment=Start The Groucho Clock when the session has been idle
+Exec=groucho-clock-screensaver watch
+Icon=groucho-clock
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

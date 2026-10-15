@@ -1,0 +1,17 @@
+Package: groucho-clock
+Version: @VERSION@
+Section: games
+Priority: optional
+Architecture: @ARCH@
+Depends: libc6 (>= 2.38), libsdl2-2.0-0 (>= 2.0.18), swayidle
+Installed-Size: @SIZE@
+Maintainer: Motti Schleider <motti.schleider@gmail.com>
+Description: The Groucho Clock, a cartoon screensaver clock of Groucho Marx
+ The Groucho Clock, a cartoon screensaver that tells the time with Groucho
+ Marx's eyes: the lenses of his glasses are two clock faces, and his pupils are
+ the hands, the left one on the hour and the right one on the minutes. His
+ eyebrows waggle every minute, his cigar burns down through the hour, and on the
+ hour he says something. Now and then his brother Gummo peeks in.
+ .
+ On Wayland desktops it starts by itself after five minutes idle.
+ groucho-clock-screensaver changes the delay or turns it off.

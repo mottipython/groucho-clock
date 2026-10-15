@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=The Groucho Clock
+Comment=A clock in Groucho Marx's glasses: his eyes are the hands
+Exec=groucho-clock --window
+Icon=groucho-clock
+Categories=Game;
+Keywords=comedy;cartoon;Marx Brothers;music;screensaver;

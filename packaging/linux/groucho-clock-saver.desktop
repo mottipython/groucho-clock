@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=The Groucho Clock
+Comment=A clock in Groucho Marx's glasses: his eyes are the hands
+Exec=groucho-clock
+TryExec=groucho-clock
+X-Screensaver-Standalone=true
+X-Screensaver-Snapshot=groucho-clock --snapshot %o --size %wx%h --time 30 --mute
