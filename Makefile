@@ -1,5 +1,5 @@
 # The Groucho Clock - a cartoon screensaver clock: Groucho Marx tells the time with his eyes
-VERSION  := 1.0.0
+VERSION  := 1.1.0
 PREFIX   ?= /usr
 SYSCONFDIR ?= /etc
 DESTDIR  ?=

@@ -6,3 +6,4 @@ Exec=groucho-clock
 TryExec=groucho-clock
 X-Screensaver-Standalone=true
 X-Screensaver-Snapshot=groucho-clock --snapshot %o --size %wx%h --time 30 --mute
+X-Screensaver-Settings=groucho-clock --settings
