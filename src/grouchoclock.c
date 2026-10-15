@@ -330,14 +330,18 @@ static const Saying *saying_for(double t)
 }
 #define HOUR_SHOW 12.0                 /* how long the hour's business takes */
 
-/* ---- Gummo ----
- * In about one minute in four he peeks in from the left for a few seconds: in, a
- * look, a raised hat, a wink or a finger to his lips, and gone. */
+/* ---- the brothers ----
+ * In about one minute in three one of them peeks in from the left for a few seconds:
+ * in, a look, then something of his own (Gummo raises his boater, winks or shushes;
+ * Chico tips his hat, winks or has an idea; Harpo honks, pulls a face or waves; Zeppo
+ * raises an eyebrow, smiles or shrugs), and gone. Groucho's eyebrows go up for each. */
+enum { PEEK_GUMMO, PEEK_CHICO, PEEK_HARPO, PEEK_ZEPPO };
+static int peeker(double t) { return (int)(hash01((uint64_t)floor(t / 60) * 7 + 9) * 4) % 4; }
 #define GUMMO_LEN 4.6
 static int gummo_at(double t, double *q, int *frame)
 {
     double m = floor(t / 60), s = t - m * 60;
-    if (hash01((uint64_t)m * 7 + 3) > 0.25) return 0;
+    if (hash01((uint64_t)m * 7 + 3) > 0.34) return 0;
     double s0 = 18 + hash01((uint64_t)m * 7 + 5) * 30;
     if (s < s0 || s > s0 + GUMMO_LEN) return 0;
     double u = s - s0;
@@ -814,7 +818,8 @@ static int write_wav(double secs)
 }
 
 /* ---- the cartoon clock's noises: a clock's ---- */
-static Snd tick, tock, tap, pff, match, chime, pop;
+ART(s_honk3, "s_honk3.ogg")
+static Snd tick, tock, tap, pff, match, chime, pop, honk;
 static void make_sounds(void)
 {
     uint64_t keep = seed_state;
@@ -822,6 +827,7 @@ static void make_sounds(void)
     tick = make_tick(1500, 140); tock = make_tick(1150, 140);
     tap = make_tick(700, 220);
     pff = make_pff(0.4); match = make_match(); chime = make_chime(); pop = make_pop();
+    honk = decode(art_s_honk3, art_s_honk3_end);
     seed_state = keep;
 }
 static void cues(double t0, double t1)
@@ -843,6 +849,7 @@ static void cues(double t0, double t1)
     #undef QDUE
     double g0, g1; int f0, f1;
     if (gummo_at(t1, &g1, &f1) && !gummo_at(t0, &g0, &f0)) play(&pop, 0.25);
+    if (gummo_at(t1, &g1, &f1) && f1 == 1 && peeker(t1) == PEEK_HARPO && gummo_at(t0, &g0, &f0) && f0 != 1) play(&honk, 0.5);
 }
 
 static void draw_scene(SDL_Renderer *r, int w, int h)
@@ -947,10 +954,11 @@ static void draw_scene(SDL_Renderer *r, int w, int h)
         if (up > 0) saying_card(saying_for(T), up);
     }
 
-    /* Gummo, at the left edge */
+    /* a brother, at the left edge */
     if (gummo) {
-        int g = SP_gummo0 + gframe;
-        double gs = sh * 0.52 / sprite[SP_gummo0].h;
+        static const int FIRST[] = {SP_gummo0, SP_chico0, SP_harpo0, SP_zeppo0};
+        int b = FIRST[peeker(T)], g = b + gframe;
+        double gs = sh * 0.52 / sprite[b].h;
         put(g, -sprite[g].w * gs * (1 - gq), sh - sprite[g].h * gs, 0, 0, gs, 0, 1, 0);
     }
     old_film();

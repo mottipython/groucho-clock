@@ -85,6 +85,25 @@ def cut_sheet(path, names_at):
     if missing: print("MISSING:", ", ".join(sorted(missing)))
     return boxes, (W, H)
 
+def brothers():
+    """Chico, Harpo and Zeppo, a row each, four frames across: the biggest shape in
+    each cell of the 4 x 3 sheet."""
+    img = np.asarray(Image.open(f"{SRC}/04-brothers.jpeg").convert("RGB")).astype(float)
+    k = key(img); H, W = k.shape[:2]
+    lab, n = blobs(k[..., 3] > 128)
+    sizes = np.bincount(lab.ravel())
+    for r, name in enumerate(("chico", "harpo", "zeppo")):
+        for c in range(4):
+            cell = lab[r * H // 3:(r + 1) * H // 3, c * W // 4:(c + 1) * W // 4]
+            ids, cnt = np.unique(cell[cell > 0], return_counts=True)
+            i = ids[np.argmax(cnt)]
+            ys, xs = np.nonzero(lab == i)
+            a, b, cc, d = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
+            part = k[b:d, a:cc].copy()
+            part[..., 3] = np.where(lab[b:d, a:cc] == i, part[..., 3], 0)
+            save(part, f"{OUT}/{name}{c}.png")
+            print(f"{name}{c}.png {cc - a}x{d - b}")
+
 def gummo():
     img = np.asarray(Image.open(f"{SRC}/03-gummo.jpeg").convert("RGB")).astype(float)
     k = key(img); H, W = k.shape[:2]
@@ -168,6 +187,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     boxes, size = cut_sheet(f"{SRC}/01-face.jpeg", PARTS)
     gummo()
+    brothers()
     subprocess.run(["magick", f"{SRC}/02-backdrop.jpeg", "-resize", "2560x", "-quality", "88", f"{OUT}/backdrop.jpg"], check=True)
     print("backdrop.jpg")
     st = stache()

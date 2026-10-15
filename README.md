@@ -17,7 +17,9 @@ Linux, Windows and macOS. One of the
 - **Every quarter of an hour** he grins and holds up one of his own lines on a card:
   51 of them, from *The Cocoanuts* to *A Day at the Races*, in a different order every
   day, each with the film it is from.
-- **Now and then** his brother Gummo, who left the act before the films, peeks in.
+- **Now and then** one of his brothers peeks in: Gummo (who left the act before the
+  films) raises his boater, Chico tips his hat, Harpo honks his horn or pulls a face,
+  and Zeppo raises an eyebrow. Groucho's eyebrows go up for each.
 
 | | |
 |---|---|
