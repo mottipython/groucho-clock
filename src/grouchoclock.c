@@ -254,17 +254,78 @@ static double hash01(uint64_t n)
     return (n >> 11) * (1.0 / 9007199254740992.0);
 }
 
-/* ---- what he says on the hour: his own lines from The Cocoanuts (1929) and Animal
- * Crackers (1930), both in the public domain ---- */
-static const char *SAYINGS[] = {
-    "HELLO, I MUST BE GOING.",
-    "ONE MORNING I SHOT AN ELEPHANT IN MY PAJAMAS. HOW HE GOT IN MY PAJAMAS I DON'T KNOW.",
-    "WHY A DUCK?",
-    "YOUR EYES SHINE LIKE THE PANTS OF A BLUE SERGE SUIT.",
-    "YOU'RE THE MOST BEAUTIFUL WOMAN I'VE EVER SEEN, WHICH DOESN'T SAY MUCH FOR YOU.",
-    "HOORAY FOR CAPTAIN SPAULDING!",
+/* ---- what he says: his own lines, every quarter of an hour, with the film each is
+ * from (as Wikiquote gives them) ---- */
+typedef struct { const char *say, *film; } Saying;
+#define AC "ANIMAL CRACKERS, 1930"
+#define CN "THE COCOANUTS, 1929"
+#define DS "DUCK SOUP, 1933"
+#define HF "HORSE FEATHERS, 1932"
+#define MB "MONKEY BUSINESS, 1931"
+#define NO "A NIGHT AT THE OPERA, 1935"
+#define DR "A DAY AT THE RACES, 1937"
+static const Saying SAYINGS[] = {
+    {"ONE MORNING I SHOT AN ELEPHANT IN MY PAJAMAS. HOW HE GOT IN MY PAJAMAS, I DON'T KNOW.", AC},
+    {"WHY, YOU'RE ONE OF THE MOST BEAUTIFUL WOMEN I'VE EVER SEEN, AND THAT'S NOT SAYING MUCH FOR YOU.", AC},
+    {"AFRICA IS GOD'S COUNTRY, AND HE CAN HAVE IT.", AC},
+    {"HELLO, I MUST BE GOING.", AC},
+    {"THE PRINCIPAL ANIMALS INHABITING THE AFRICAN JUNGLE ARE MOOSE, ELKS AND KNIGHTS OF PYTHIAS.", AC},
+    {"YOU TAKE CARE OF YOUR ANIMALS AND I'LL TAKE CARE OF MINE!", AC},
+    {"WHEN YOU GET NEAR A SONG, PLAY IT.", AC},
+    {"HOW MUCH WOULD YOU WANT TO RUN INTO AN OPEN MANHOLE?", AC},
+    {"PARDON ME WHILE I HAVE A STRANGE INTERLUDE.", AC},
+    {"THREE YEARS AGO I CAME TO FLORIDA WITHOUT A NICKEL IN MY POCKET. NOW I'VE GOT A NICKEL IN MY POCKET.", CN},
+    {"NOW THIS IS OUR CEMETERY. I'VE GOT A LIST OF A HUNDRED PEOPLE JUST DYING TO GET IN.", CN},
+    {"I'M GOING TO GET YOU A STEADY POSITION. AND IF I CAN ARRANGE IT, IT'LL BE HORIZONTAL.", CN},
+    {"ICE WATER IN ROOM 318? NO KIDDING, WHERE'D YOU GET IT?", CN},
+    {"DON'T PICK THEIR POCKETS, JUST MINGLE WITH THEM.", CN},
+    {"OH, I SEE! YOU'RE JUST AN IDLE ROOMER!", CN},
+    {"WELL, I DON'T KNOW WHY A NO CHICKEN. I'M A STRANGER HERE MYSELF.", CN},
+    {"A YES LIKE THAT WAS ONCE RESPONSIBLE FOR ME JUMPING OUT OF A WINDOW.", CN},
+    {"I COULD DANCE WITH YOU TILL THE COWS COME HOME. ON SECOND THOUGHT, I'D RATHER DANCE WITH THE COWS TILL YOU CAME HOME.", DS},
+    {"DON'T LOOK NOW, BUT THERE'S ONE MAN TOO MANY IN THIS ROOM, AND I THINK IT'S YOU.", DS},
+    {"I'LL SEE MY LAWYER ABOUT THIS AS SOON AS HE GRADUATES FROM LAW SCHOOL.", DS},
+    {"CHICOLINI HERE MAY TALK LIKE AN IDIOT, AND LOOK LIKE AN IDIOT. BUT DON'T LET THAT FOOL YOU. HE REALLY IS AN IDIOT.", DS},
+    {"REMEMBER, YOU'RE FIGHTING FOR THIS WOMAN'S HONOR, WHICH IS PROBABLY MORE THAN SHE EVER DID.", DS},
+    {"YOU MUST HAVE BEEN VACCINATED WITH A PHONOGRAPH NEEDLE.", DS},
+    {"GET ME HEADQUARTERS. NOT HINDQUARTERS, HEADQUARTERS!", DS},
+    {"LET ME OUT OF HERE, OR THROW ME A MAGAZINE!", DS},
+    {"YOU'VE GOT THE BRAIN OF A FOUR-YEAR-OLD BOY, AND I BET HE WAS GLAD TO GET RID OF IT.", HF},
+    {"WELL, I THOUGHT MY RAZOR WAS DULL UNTIL I HEARD THIS SPEECH.", HF},
+    {"I'D HORSEWHIP YOU, IF I HAD A HORSE.", HF},
+    {"I MARRIED YOUR MOTHER BECAUSE I WANTED CHILDREN. IMAGINE MY DISAPPOINTMENT WHEN YOU ARRIVED.", HF},
+    {"OH, I LOVE SITTING ON YOUR LAP. I COULD SIT HERE ALL DAY IF YOU DIDN'T STAND UP.", HF},
+    {"WHY DON'T YOU BORE A HOLE IN YOURSELF AND LET THE SAP RUN OUT?", HF},
+    {"IS THIS STUFF ON THE LEVEL OR ARE YOU JUST MAKING IT UP AS YOU GO ALONG?", HF},
+    {"I'M ALWAYS THAT WAY AFTER I EAT RADISHES.", HF},
+    {"SIR, ARE YOU TRYING TO OFFER ME A BRIBE? HOW MUCH?", MB},
+    {"WITH A LITTLE STUDY YOU'LL GO A LONG WAY. AND I WISH YOU'D START NOW.", MB},
+    {"MADAM, I RESENT THAT. SOME OF MY BEST FRIENDS ARE HOUSEWIVES!", MB},
+    {"ALL RIGHT, GIVE ME THE DOLLAR, I'LL KEEP THE CHANGE.", MB},
+    {"AFRAID? ME? A MAN WHO'S LICKED HIS WEIGHT IN WILD CATERPILLARS? AFRAID? YOU BET I'M AFRAID!", MB},
+    {"LADIES AND GENTLEMEN. I GUESS THAT TAKES IN MOST OF YOU.", NO},
+    {"EVERYTHING ABOUT YOU REMINDS ME OF YOU. EXCEPT YOU.", NO},
+    {"YES. JUST ME AND MY MEMORIES. I'M PRACTICALLY A HERMIT.", NO},
+    {"THEY'RE FAMOUS AS AVIATORS, BUT YOU NOTICE THEY'RE TRAVELING BY BOAT.", NO},
+    {"CAN YOU SLEEP ON YOUR STOMACH WITH SUCH BIG BUTTONS ON YOUR PAJAMAS?", NO},
+    {"WELL, I HAVEN'T SAID ANYTHING WORTH HEARING.", NO},
+    {"EITHER HE'S DEAD OR MY WATCH HAS STOPPED!", DR},
+    {"TAKE ONE OF THOSE EVERY HALF MILE AND CALL ME IF THERE'S ANY CHANGE.", DR},
+    {"DON'T DRINK THAT POISON! THAT'S FOUR DOLLARS AN OUNCE.", DR},
+    {"IF I HOLD YOU ANY CLOSER, I'LL BE IN BACK OF YA!", DR},
+    {"THE LAST PATIENT I GAVE ONE OF THOSE TO WON THE KENTUCKY DERBY.", DR},
+    {"ALL I WANTED WAS A HORSE, NOT A PUBLIC LIBRARY.", DR},
+    {"IT'S THE OLD, OLD STORY. BOY MEETS GIRL - ROMEO AND JULIET - MINNEAPOLIS AND ST. PAUL!", DR},
 };
 #define NSAYING (int)(sizeof SAYINGS / sizeof *SAYINGS)
+#define QUARTER 900.0
+#define CARD_LEN 10.0                  /* how long a saying stays up */
+/* the saying for a quarter of an hour: a different order each day */
+static const Saying *saying_for(double t)
+{
+    uint64_t day = (uint64_t)(time(NULL) / 86400), q = (uint64_t)(t / QUARTER);
+    return &SAYINGS[(int)(hash01(day * 131 + q) * NSAYING) % NSAYING];
+}
 #define HOUR_SHOW 12.0                 /* how long the hour's business takes */
 
 /* ---- Gummo ----
@@ -326,11 +387,12 @@ static void old_film(void)
 #define EYE_LX 352.0
 #define EYE_RX 602.0
 #define EYE_Y 446.0
-#define DIAL_R 84.0                    /* the clock face inside each lens */
+#define DIAL_R 84.0                    /* the clock face inside each lens, */
+#define BIG 1.32                       /* and the glasses made this much bigger, to read them */
 #define GLASS_LX 118.0                 /* the lenses' middles in the glasses picture */
 #define GLASS_RX 356.0
 #define GLASS_Y 92.0
-#define BROW_Y 300.0                   /* where the eyebrows sit, above the glasses */
+#define BROW_Y 285.0                   /* where the eyebrows sit, above the glasses */
 #define BROW_SCALE 0.72
 #define STACHE_X 478.0                 /* the middle of his moustache, on the face, */
 #define STACHE_Y 651.0
@@ -362,31 +424,33 @@ static void put(int which, double x, double y, double ax, double ay, double scal
  * 1, clockwise from the top). */
 static void dial(double ex, double ey, double turn, const char *label, int minutes)
 {
-    double cx, cy, r = DIAL_R * fs;
+    double cx, cy, r = DIAL_R * BIG * fs;
     at_face(ex, ey, &cx, &cy);
-    disc(cx, cy, r, col((Rgb){252, 249, 238}, 1), col((Rgb){232, 226, 210}, 1));
-    for (int i = 0; i < 12; i++) {
-        double a = i * M_PI / 6, big = i % 3 == 0;
-        double r0 = r * (big ? 0.80 : 0.86), r1 = r * 0.95;
-        line(cx + sin(a) * r0, cy - cos(a) * r0, cx + sin(a) * r1, cy - cos(a) * r1, r * (big ? 0.05 : 0.03), col(INK, 1));
+    disc(cx, cy, r, col((Rgb){253, 251, 242}, 1), col((Rgb){236, 230, 214}, 1));
+    for (int i = 0; i < (minutes ? 60 : 12); i++) {          /* ticks round the rim */
+        int step = minutes ? i % 5 == 0 : 1, quarter = minutes ? i % 15 == 0 : i % 3 == 0;
+        double a = i * 2 * M_PI / (minutes ? 60 : 12);
+        double r0 = r * (quarter ? 0.84 : step ? 0.88 : 0.93), r1 = r * 0.97;
+        line(cx + sin(a) * r0, cy - cos(a) * r0, cx + sin(a) * r1, cy - cos(a) * r1,
+             r * (quarter ? 0.05 : step ? 0.035 : 0.016), col(INK, 1));
     }
-    if (minutes)
-        for (int i = 0; i < 60; i++) {
-            if (i % 5 == 0) continue;
-            double a = i * M_PI / 30;
-            line(cx + sin(a) * r * 0.90, cy - cos(a) * r * 0.90, cx + sin(a) * r * 0.95, cy - cos(a) * r * 0.95, r * 0.018, col(INK, 0.8));
-        }
     static const char *QH[] = {"12", "3", "6", "9"}, *QM[] = {"60", "15", "30", "45"};
     const char **Q = minutes ? QM : QH;
-    for (int i = 0; i < 4; i++) {
-        double a = i * M_PI / 2, s = r * 0.045;
-        text(Q[i], cx + sin(a) * r * 0.62, cy - cos(a) * r * 0.62 - 3 * s, s, 1.0, col(INK, 0.8));
+    for (int i = 0; i < 4; i++) {                            /* the quarters, big and bold */
+        double a = i * M_PI / 2, sz = r * 0.047, rr = i % 2 ? r * 0.80 - text_width(Q[i], sz) / 2 : r * 0.60;
+        text(Q[i], cx + sin(a) * rr, cy - cos(a) * rr - 3 * sz, sz, 1.25, col(INK, 1));
     }
-    text(label, cx, cy + r * 0.20, r * 0.026, 1.0, col(INK, 0.4));
+    (void)label;
     flush(ren);
-    double a = turn * 2 * M_PI, pr = r * 0.40, px = cx + sin(a) * pr, py = cy - cos(a) * pr;
-    line(cx, cy, px, py, r * 0.035, col(INK, 0.55));                  /* a faint hand, for reading it */
-    disc(cx, cy, r * 0.05, col(INK, 0.7), col(INK, 0.7));
+    /* the hand: a tapering black hand from the middle, with his pupil at its tip */
+    double a = turn * 2 * M_PI, pr = r * 0.50, px = cx + sin(a) * pr, py = cy - cos(a) * pr;
+    double nx = cos(a), ny = sin(a), w = r * 0.045;
+    vb_need(3, 3);
+    int k = nv;
+    vert(cx + nx * w, cy + ny * w, col(INK, 1)); vert(cx - nx * w, cy - ny * w, col(INK, 1)); vert(px, py, col(INK, 1));
+    ib[ni++] = k; ib[ni++] = k + 1; ib[ni++] = k + 2;
+    disc(cx, cy, r * 0.07, col(INK, 1), col(INK, 1));
+    disc(cx, cy, r * 0.025, col(GOLD, 1), col(GOLD, 1));
     put(SP_pupil, px, py, sprite[SP_pupil].w / 2.0, sprite[SP_pupil].h / 2.0, fs * 0.62, 0, 1, 0);
 }
 
@@ -405,6 +469,7 @@ static void smoke(double x, double y, double strength)
     for (int i = 0; i < 4; i++) {
         double life = 4.5, age = fmod(anim_t + i * life / 4, life), q = age / life;
         double sx = x + sin(anim_t * 0.9 + i * 2.1) * fs * 30 * q + fs * 260 * q, sy = y - fs * 300 * q;
+        sx += fs * 120 * q;
         double a = strength * 0.75 * sin(M_PI * q);
         put(SP_smoke, sx, sy, sprite[SP_smoke].w / 2.0, sprite[SP_smoke].h, fs * (0.5 + 0.7 * q), sin(anim_t * 0.7 + i) * 12, a, i & 1);
     }
@@ -412,11 +477,11 @@ static void smoke(double x, double y, double strength)
 
 /* the saying, on a card held up from below on a stick, in silver on black as in
  * the films' title cards */
-static void saying_card(const char *say, double up)
+static void saying_card(const Saying *sy, double up)
 {
     const int WRAP = 24;
     char lines[6][64]; int n = 0, len = 0, most = 0;
-    const char *p = say; lines[0][0] = 0;
+    const char *p = sy->say; lines[0][0] = 0;
     while (*p && n < 6) {                                  /* wrap at WRAP letters */
         const char *e = p; while (*e && *e != ' ') e++;
         int wl = (int)(e - p);
@@ -429,7 +494,7 @@ static void saying_card(const char *say, double up)
     n++;
     double w = sw * 0.5, cx = sw / 2.0;
     double s = (w - unit * 8) / (most * 6.2);              /* as big as fits across the card */
-    double lh = s * 10, h = lh * n + s * 8;
+    double lh = s * 10, fsz = s * 0.55, h = lh * n + s * 8 + fsz * 9;
     double y = sh + unit * 2 - (sh * 0.05 + h + unit * 2) * up;
     SDL_Color gold = col(GOLD, 1), silver = col((Rgb){232, 230, 222}, 1);
     line(cx, y + h, cx, sh + unit, unit * 1.1, col(INK, 1));            /* the stick */
@@ -441,6 +506,7 @@ static void saying_card(const char *say, double up)
     line(cx + w / 2 - unit, y + h - unit, cx - w / 2 + unit, y + h - unit, unit * 0.5, gold);
     line(cx - w / 2 + unit, y + h - unit, cx - w / 2 + unit, y + unit, unit * 0.5, gold);
     for (int i = 0; i < n; i++) text(lines[i], cx, y + s * 5 + i * lh, s, 1.0, silver);
+    text(sy->film, cx, y + s * 5 + n * lh + fsz * 1.5, fsz, 1.0, col(GOLD, 0.9));
     flush(ren);
 }
 
@@ -456,7 +522,7 @@ static void draw_scene(SDL_Renderer *r, int w, int h)
     flush(ren);
 
     double hp = fmod(T, 3600), mp = fmod(T, 60);
-    double hour = floor(T / 3600), minutes = hp / 60;
+    double minutes = hp / 60;
     double gq; int gframe;
     int gummo = gummo_at(T, &gq, &gframe);
 
@@ -467,13 +533,14 @@ static void draw_scene(SDL_Renderer *r, int w, int h)
     put(SP_face, fx0, fy0, 0, 0, fs, 0, 1, 0);
 
     /* the clocks in his glasses: hours on the left, minutes on the right */
-    double h12 = fmod(T / 3600, 12);
-    dial(EYE_LX, EYE_Y, h12 / 12, "HR", 0);
-    dial(EYE_RX, EYE_Y, minutes / 60, "MIN", 1);
+    /* the glasses, made big and set between his eyes; the lenses' middles are the dials' */
+    double h12 = fmod(T / 3600, 12), gk = (EYE_RX - EYE_LX) / (GLASS_RX - GLASS_LX) * BIG;
+    double mid = (EYE_LX + EYE_RX) / 2, half = (GLASS_RX - GLASS_LX) / 2 * gk;
+    dial(mid - half, EYE_Y, h12 / 12, "HOURS", 0);
+    dial(mid + half, EYE_Y, minutes / 60, "MINUTES", 1);
     double gx, gy;
-    double gk = (EYE_RX - EYE_LX) / (GLASS_RX - GLASS_LX);
-    at_face(EYE_LX, EYE_Y, &gx, &gy);
-    put(SP_glasses, gx, gy, GLASS_LX, GLASS_Y, fs * gk, 0, 1, 0);
+    at_face(mid, EYE_Y, &gx, &gy);
+    put(SP_glasses, gx, gy, (GLASS_LX + GLASS_RX) / 2, GLASS_Y, fs * gk, 0, 1, 0);
 
     /* the eyebrows: a waggle as each minute begins, a long one on the hour, and up
      * in surprise when Gummo looks in */
@@ -510,10 +577,11 @@ static void draw_scene(SDL_Renderer *r, int w, int h)
         smoke(sx, sy, fmin(puff, 1.6));
     }
 
-    /* the saying for the hour */
-    if (hp < HOUR_SHOW) {
-        double down = ease(ramp(hp, 3.8, 4.6)) * (1 - ease(ramp(hp, HOUR_SHOW - 1.2, HOUR_SHOW - 0.4)));
-        if (down > 0) saying_card(SAYINGS[(int)hour % NSAYING], down);
+    /* a saying every quarter of an hour; on the hour, after the new cigar */
+    double qp = fmod(T, QUARTER), q0 = hp < QUARTER ? 3.8 : 0.3;
+    if (qp < q0 + CARD_LEN) {
+        double up = ease(ramp(qp, q0, q0 + 0.8)) * (1 - ease(ramp(qp, q0 + CARD_LEN - 0.8, q0 + CARD_LEN)));
+        if (up > 0) saying_card(saying_for(T), up);
     }
 
     /* Gummo, at the left edge */
