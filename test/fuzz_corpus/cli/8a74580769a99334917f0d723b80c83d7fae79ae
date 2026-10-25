@@ -1,0 +1,4 @@
+--snapshot /tmp/outb
+
+ --m --time 120.0 -tp/out.bmp -=1
+

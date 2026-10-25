@@ -1,0 +1,6 @@
+--snapsh/tmp/outb
+
+ --m -ot /tmp/outb
+
+ --m --time 120.0 -tp/out.bmp -=1
+

@@ -1,0 +1,4 @@
+--snapshot /tmp/outb
+
+ --mute --ize 1920x1080 --time 120.0 -tp/out.bmp -=1
+
